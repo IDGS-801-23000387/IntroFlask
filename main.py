@@ -1,4 +1,4 @@
-from flask import Flask,render_template
+from flask import Flask,render_template, request
 
 app=Flask(__name__)
 
@@ -11,6 +11,26 @@ def index():
 @app.route("/ejemplo1")
 def ejemplo1():
     return render_template("ejemplo1.html")
+
+@app.route("/OperasBas", methods=["GET", "POST"])
+def operas1():
+    resultado = 0
+    if request.method == "POST":
+        n1 = float(request.form.get("n1"))   
+        n2 = float(request.form.get("n2"))
+        seleccion = request.form.get("seleccion")   
+
+        if seleccion == "suma":
+            resultado = f"La suma de {n1} + {n2} es {n1 + n2}"
+        elif seleccion == "resta":
+            resultado = f"La resta de {n1} - {n2} es {n1 - n2}"
+        elif seleccion == "multiplicacion":
+            resultado = f"La multiplicación de {n1} * {n2} es {n1 * n2}"
+        elif seleccion == "division":
+            resultado = f"La división de {n1} / {n2} es {n1 / n2}"   
+            
+
+    return render_template("OperasBas.html", resultado=resultado)
 
 app.route("/ejemplo2")
 def ejemplo2():
