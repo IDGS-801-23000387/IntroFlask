@@ -1,5 +1,5 @@
 from flask import Flask,render_template, request
-
+from datetime import datetime
 app=Flask(__name__)
 
 @app.route("/")
@@ -72,7 +72,35 @@ def operas():
         <input type="text" id="APaterno" name="APaterno" required>
     </form>
            '''
-           
+@app.route('/ZodiacoChino', methods=['GET', 'POST'])
+
+def index():
+    signos_chinos = [
+        ("Mono", "mono.png"),
+        ("Gallo", "gallo.png"),
+        ("Perro", "perro.png"),
+        ("Cerdo", "cerdo.png"),
+        ("Rata", "rata.png"),
+        ("Buey", "buey.png"),
+        ("Tigre", "tigre.png"),
+        ("Conejo", "conejo.png"),
+        ("Dragón", "dragon.png"),
+        ("Serpiente", "serpiente.png"),
+        ("Caballo", "caballo.png"),
+        ("Cabra", "cabra.png")
+    ]
+    if request.method == 'POST':
+        nombre = request.form.get("nombre")
+        apellidoP = request.form.get("apellidoP")
+        apellidoM = request.form.get("apellidoM")
+        anio = request.form.get("anio")
+        anio = int(anio)
+        añoPresente = datetime.now().year
+        edad = añoPresente - anio
+        signoInfo = signos_chinos[anio % 12]
+        signo =  signoInfo[0]  
+        imagen = f"static/img/{ signoInfo[1]}"  
+    return render_template('ZodiacoChino.html',nombre=nombre,apellidoP=apellidoP,apellidoM=apellidoM,signo=signo,imagen=imagen,edad=edad)           
 if __name__== "__main__":
     app.run(debug=True, port=3000)
     
