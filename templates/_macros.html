@@ -3,16 +3,17 @@
 <p> <input name="{{name}}"  type="{{type}}" placeholder="{{placeholder}}"/> </p>
 {%endmacro%}
 
-{%macro camposNuevos(field) %}
-<td>{{field.label}}</td>
-<dd>{{field(**kwargs) | safe}}</dd>
+<!-- _macros.html -->
+{% macro camposNuevos(field) %}
+<td>{{ field.label }}</td>
+<dd>{{ field(**kwargs) | safe }}</dd>
 
-{%if field.errors %}
+{% if field.errors %}
 <ul>
-    {%for error in field.errors %}
-    <li style="color: brown;">{{error}}</li>
-    {%endfor%}
+    {% for error in field.errors %}
+    <li style="color: brown;">{{ error }}</li>
+    {% endfor %}
 </ul>
-{%endif%}
-{%endmacro%}    
+{% endif %}
+{% endmacro %}
  

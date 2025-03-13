@@ -1,76 +1,24 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Signo Zodiacal Chino</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-        }
-        .container {
-            display: flex;
-            width: 80%;
-            max-width: 800px;
-        }
-        .card {
-            border: 2px solid black;
-            padding: 20px;
-            margin: 10px;
-            width: 50%;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-        }
-        .text-center {
-            text-align: center;
-        }
-        .img-fluid {
-            max-width: 100px;
-        }
-        .error {
-            color: red;
-            font-weight: bold;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Columna del formulario -->
-        <div class="card">
-            <h4>Datos Personales</h4>
-            <form method="POST">
-                <label for="nombre">Nombre</label>
-                <input type="text" name="nombre" required><br>
-                <label for="apellidoP">Apellido Paterno</label>
-                <input type="text" name="apellidoP" required><br>
-                <label for="apellidoM">Apellido Materno</label>
-                <input type="text" name="apellidoM" required><br>
-                <label for="anio">Año de Nacimiento</label> <br>
-                <input type="number" name="anio" placeholder="Año" min="1900" max="2025" required> 
-                <input type="number" id="dia" placeholder="Día" min="1" max="31">
-                <input type="number" id="mes" placeholder="Mes" min="1" max="12"><br>
-                <label>Sexo</label><br>
-                <input type="radio" name="sexo" value="Masculino" required> Masculino
-                <input type="radio" name="sexo" value="Femenino" required> Femenino<br>
-                <button type="submit">Ver Signo</button>
-            </form>
-        </div>
-        
-        <!-- Columna de resultados -->
-        <div class="text-center">
-            <h4>Resultado</h4>
-            {% if%}
-               
-            {% elif nombre and apellidoP and apellidoM and signo and imagen and edad %}
-                <p>Hola {{ nombre }} {{ apellidoP }} {{ apellidoM }}</p>
-                <p>Tienes {{ edad }} años.</p>
-                <p>Tu signo zodiacal chino es {{ signo }}</p>
-                <img src="{{ imagen }}" alt="Signo" class="img-fluid">
-            {% endif %}
-        </div>
-    </div>
-</body>
-</html>
+ <!-- ZodiacoChino.html -->
+{% extends "layout2.html" %}
+{% block content %}
+{% import "_macros.html" as macro %}
+<h1>Signo del zodíaco chino</h1>
+<form action="" method="post" novalidate>
+    {{ form.csrf_token }}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    {{ macro.camposNuevos(form.nombre) }}
+    {{ macro.camposNuevos(form.apellidoP) }}
+    {{ macro.camposNuevos(form.apellidoM) }}
+    {{ macro.camposNuevos(form.anio) }}
+    {{ macro.camposNuevos(form.dia) }}
+    {{ macro.camposNuevos(form.mes) }}
+    {{ macro.camposNuevos(form.sexo) }}
+    <input type="submit" name="btn1" value="Calcular" class="btn btn-primary">
+</form>
+{% if nombre and apellidoP and apellidoM and signo and imagen and edad %}
+    <h4>Hola : {{ nombre }} {{ apellidoP }} {{ apellidoM }}</h4>
+    <h4>Tienes: {{ edad }} años</h4>
+    <h4> Tu Signo del zodíaco chino es: {{ signo }}</h4>
+    <img src="{{ imagen }}" alt="{{ signo }}" style="width: 200px;">
+{% endif %}
+{% endblock %}

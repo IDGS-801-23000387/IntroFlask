@@ -10,7 +10,7 @@ app.secret_key="1234567890"
 csrf=CSRFProtect()
 @app.route("/")
 def index():
-    titulo = "IDGS801"
+    
     return render_template("index.html" )
 
 @app.route("/ejemplo1")
@@ -93,8 +93,32 @@ def operas():
     </form>
     '''
 
+ 
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+@app.before_request
+def before_request():
+    print("beforer 1")
+
+@app.after_request
+def after_request(response):
+    print("afterr 3")
+    return response
+# main.py
 @app.route('/ZodiacoChino', methods=['GET', 'POST'])
 def zodiaco_chino():
+    nombre = ""
+    apellidoP =""
+    apellidoM = ""
+    signo = ""
+    imagen =""
+    edad = 0
+    dia =0
+    mes = 0
+    sexo = ""
     signos_chinos = [
         ("Mono", "mono.png"),
         ("Gallo", "gallo.png"),
@@ -109,33 +133,26 @@ def zodiaco_chino():
         ("Caballo", "caballo.png"),
         ("Cabra", "cabra.png")
     ]
-    if request.method == 'POST':
-        nombre = request.form.get("nombre")
-        apellidoP = request.form.get("apellidoP")
-        apellidoM = request.form.get("apellidoM")
-        anio = request.form.get("anio")
-        anio = int(anio)
+
+    zodiaco_form = forms.ZodiacoForm(request.form)
+    
+
+    if request.method == 'POST' and zodiaco_form.validate():
+        nombre = zodiaco_form.nombre.data
+        apellidoP = zodiaco_form.apellidoP.data
+        apellidoM = zodiaco_form.apellidoM.data
+        anio = zodiaco_form.anio.data
+        dia = zodiaco_form.dia.data
+        mes = zodiaco_form.mes.data
+        sexo = zodiaco_form.sexo.data
+
         añoPresente = datetime.now().year
         edad = añoPresente - anio
         signoInfo = signos_chinos[anio % 12]
         signo = signoInfo[0]
         imagen = f"static/img/{signoInfo[1]}"
-        return render_template('ZodiacoChino.html', nombre=nombre, apellidoP=apellidoP, apellidoM=apellidoM, signo=signo, imagen=imagen, edad=edad)
-    return render_template('ZodiacoChino.html')
 
-@app.errorhandler(404)
-def page_not_found(e):
-    return render_template('404.html'), 404
-
-@app.before_request
-def before_request():
-    print("beforer 1")
-
-@app.after_request
-def after_request(response):
-    print("afterr 3")
-    return response
-
+    return render_template('ZodiacoChino.html', form=zodiaco_form, nombre=nombre, apellidoP=apellidoP, apellidoM=apellidoM, signo=signo, imagen=imagen, edad=edad, dia=dia, mes=mes, sexo=sexo)
 if __name__ == "__main__":
     csrf.init_app(app)
     app.run(debug=True, port=3000)
